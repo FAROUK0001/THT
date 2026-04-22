@@ -1,0 +1,1741 @@
+%=============================================================================
+%  TECHNIQUES DE HAUTE TENSION — High Voltage Engineering
+%  Document pédagogique complet  |  Niveau Licence / Master
+%=============================================================================
+\documentclass[12pt, a4paper, twoside]{report}
+
+%─── Encoding & Language ─────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+
+%─── Page geometry ────────────────────────────────────────────────────────────
+\usepackage[
+  a4paper,
+  top=2.5cm, bottom=2.8cm,
+  left=2.8cm, right=2.2cm,
+  headheight=15pt
+]{geometry}
+
+%─── Colors ───────────────────────────────────────────────────────────────────
+\usepackage[dvipsnames, svgnames, table]{xcolor}
+\definecolor{darkblue}{HTML}{0D2B55}
+\definecolor{midblue}{HTML}{1A4A8A}
+\definecolor{lightblue}{HTML}{3A7CC1}
+\definecolor{accent}{HTML}{E8A020}
+\definecolor{lightgray}{HTML}{F4F6F9}
+\definecolor{bordergray}{HTML}{CBD5E0}
+\definecolor{hvred}{HTML}{C0392B}
+\definecolor{hvgreen}{HTML}{1A7A4A}
+\definecolor{boxbg}{HTML}{EBF4FF}
+\definecolor{warnbg}{HTML}{FFF8E7}
+\definecolor{warnborder}{HTML}{F6AD55}
+\definecolor{successbg}{HTML}{F0FFF4}
+\definecolor{successborder}{HTML}{48BB78}
+\definecolor{formulabg}{HTML}{EEF2FF}
+\definecolor{textdark}{HTML}{1A202C}
+\definecolor{textmed}{HTML}{4A5568}
+
+%─── Graphics & Figures ───────────────────────────────────────────────────────
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\graphicspath{{./figures/}}
+
+%─── TikZ & PGFPlots ──────────────────────────────────────────────────────────
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{
+  arrows.meta, shapes.geometric, shapes.misc,
+  positioning, calc, decorations.pathmorphing,
+  decorations.markings, patterns, shadows,
+  backgrounds, fit, matrix, circuits.ee.IEC
+}
+
+%─── Math ─────────────────────────────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{siunitx}
+\sisetup{locale=FR, per-mode=fraction}
+
+%─── Tables ───────────────────────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{colortbl}
+
+%─── Typography & Layout ──────────────────────────────────────────────────────
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{parskip}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+%─── Custom boxes ─────────────────────────────────────────────────────────────
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins, breakable, listingsutf8}
+
+%─── Headers & Footers ────────────────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\small\thepage}
+\fancyhead[LO]{\small\textcolor{midblue}{\leftmark}}
+\fancyhead[RE]{\small\textcolor{midblue}{Techniques de Haute Tension}}
+\fancyfoot[C]{\small\textcolor{textmed}{Support de cours — Ingénierie Électrique}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+%─── Chapter/Section styling ─────────────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[block]
+{\normalfont\huge\bfseries\color{white}}
+{}
+{0pt}
+{
+	\colorbox{darkblue}{
+		\parbox{\dimexpr\textwidth-2\fboxsep\relax}{
+			\hspace{4pt}\textcolor{accent}{\thechapter.}\hspace{8pt}\strut #1\hspace{4pt}
+		}
+	}
+}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{darkblue}}
+  {\textcolor{accent}{\thesection}\hspace{8pt}}
+  {0pt}{}
+  [\vspace{-4pt}\textcolor{lightblue}{\rule{\textwidth}{1pt}}]
+\titlespacing*{\section}{0pt}{16pt}{8pt}
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\color{midblue}}
+  {\textcolor{midblue}{\thesubsection}\hspace{6pt}}
+  {0pt}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\itshape\color{lightblue}}
+  {\thesubsubsection\hspace{6pt}}
+  {0pt}{}
+\titlespacing*{\subsubsection}{0pt}{8pt}{2pt}
+
+%─── TOC styling ──────────────────────────────────────────────────────────────
+\usepackage{tocloft}
+\renewcommand{\cftchapfont}{\bfseries\color{darkblue}}
+\renewcommand{\cftchappagefont}{\bfseries\color{accent}}
+\renewcommand{\cftsecfont}{\color{midblue}}
+\renewcommand{\cftsubsecfont}{\small\color{textmed}}
+
+%─── Hyperref ─────────────────────────────────────────────────────────────────
+\usepackage[
+  colorlinks=true,
+  linkcolor=midblue,
+  citecolor=hvgreen,
+  urlcolor=lightblue,
+  pdfauthor={HV Engineering Course},
+  pdftitle={Techniques de Haute Tension},
+  pdfsubject={High Voltage Engineering}
+]{hyperref}
+\usepackage{bookmark}
+
+%─── Custom environments ─────────────────────────────────────────────────────
+% Info box
+\newtcolorbox{infobox}[1]{
+  enhanced, breakable,
+  colback=boxbg, colframe=lightblue, colbacktitle=midblue,
+  title={\faIcon{info-circle}\hspace{4pt}#1},
+  fonttitle=\bfseries\color{white},
+  boxrule=1pt, arc=4pt,
+  leftrule=4pt,
+  before skip=8pt, after skip=8pt
+}
+% Warning box
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable,
+  colback=warnbg, colframe=warnborder, colbacktitle=accent,
+  title={\textbf{⚠\space#1}},
+  fonttitle=\bfseries\color{white},
+  boxrule=1pt, arc=4pt, leftrule=4pt,
+  before skip=8pt, after skip=8pt
+}
+% Success / À retenir box
+\newtcolorbox{retenir}[1]{
+  enhanced, breakable,
+  colback=successbg, colframe=successborder, colbacktitle=hvgreen,
+  title={\textbf{✓\space#1}},
+  fonttitle=\bfseries\color{white},
+  boxrule=1pt, arc=4pt, leftrule=4pt,
+  before skip=8pt, after skip=8pt
+}
+% Formula box
+\newtcolorbox{formulebox}[1]{
+  enhanced,
+  colback=formulabg, colframe=midblue, colbacktitle=darkblue,
+  title={\textbf{#1}},
+  fonttitle=\bfseries\color{white},
+  boxrule=1.2pt, arc=5pt,
+  before skip=8pt, after skip=8pt
+}
+% Example box
+\newtcolorbox{exemple}[1]{
+  enhanced, breakable,
+  colback=white, colframe=accent, colbacktitle=accent,
+  title={\textbf{Exemple : #1}},
+  fonttitle=\bfseries\color{white},
+  boxrule=1pt, arc=4pt, leftrule=4pt,
+  before skip=8pt, after skip=8pt
+}
+
+%─── Misc ─────────────────────────────────────────────────────────────────────
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=1.5em, itemsep=3pt, topsep=4pt}
+\setlist[enumerate]{leftmargin=1.5em, itemsep=3pt, topsep=4pt}
+\usepackage{caption}
+\captionsetup{font=small, labelfont={bf,color=midblue}, labelsep=period}
+\usepackage{epigraph}
+\usepackage{afterpage}
+\usepackage{pdflscape}
+
+%─── Font icons (optional, comment out if not installed) ──────────────────────
+% \usepackage{fontawesome5}
+
+%=============================================================================
+%  DOCUMENT
+%=============================================================================
+\begin{document}
+
+%─── COVER PAGE ───────────────────────────────────────────────────────────────
+\begin{titlepage}
+\pagecolor{darkblue}
+\afterpage{\nopagecolor}
+\centering
+\vspace*{1.5cm}
+
+{\color{accent}\rule{\textwidth}{3pt}}
+\vspace{0.4cm}
+
+{\color{white}\fontsize{36}{44}\selectfont\bfseries
+  TECHNIQUES DE HAUTE TENSION}
+
+\vspace{0.3cm}
+{\color{lightblue}\fontsize{20}{26}\selectfont
+  High Voltage Engineering}
+
+\vspace{0.4cm}
+{\color{accent}\rule{\textwidth}{1.5pt}}
+\vspace{0.6cm}
+
+% Cover figure placeholder
+\begin{tikzpicture}
+  \fill[darkblue!60] (0,0) rectangle (14,6);
+  % Transmission tower sketch
+  \draw[accent!80, line width=1.5pt] (2,0) -- (2,5.5);
+  \draw[accent!80, line width=1.5pt] (1,0) -- (2,2) -- (3,0);
+  \draw[accent!80, line width=1.5pt] (0.5,1.5) -- (3.5,1.5);
+  \draw[accent!80, line width=1.5pt] (0.8,3.0) -- (3.2,3.0);
+  \draw[accent!80, line width=1.5pt] (1.2,4.5) -- (2.8,4.5);
+  % Corona glow
+  \foreach \r in {0.3,0.6,0.9,1.2}{
+    \draw[lightblue!\the\numexpr120-\r*40\relax, opacity=0.4, line width=\r pt]
+      (7,3) circle (\r);
+  }
+  \fill[white] (7,3) circle (0.18);
+  \node[color=white, font=\tiny] at (7,3) {HT};
+  % E field arrows
+  \foreach \a in {0,45,...,315}{
+    \draw[-Stealth, lightblue, opacity=0.6, line width=0.8pt]
+      ({7+0.25*cos(\a)},{3+0.25*sin(\a)}) --
+      ({7+1.4*cos(\a)},{3+1.4*sin(\a)});
+  }
+  % Labels
+  \node[color=white, font=\large\bfseries] at (7,5.3) {Champ électrique \& Corona};
+  \node[color=accent, font=\normalsize] at (2,5.8) {Pylône THT};
+  % Wave
+  \draw[hvred, line width=1.5pt, domain=9:13.5, samples=100]
+    plot(\x, {3 + 2*exp(-(\x-9)/1.2)*sin(720*(\x-9))});
+  \node[color=white, font=\normalsize] at (11.2,5.3) {Onde d'impulsion};
+  \node[color=hvred, font=\small] at (11.2,0.4) {1.2/50 \(\mu\)s};
+\end{tikzpicture}
+
+\vspace{0.6cm}
+\begin{tcolorbox}[
+  colback=midblue!80, colframe=lightblue, arc=6pt,
+  width=0.85\textwidth, boxrule=1pt
+]
+\centering
+\color{white}
+\textbf{\large Support de cours — Niveau Licence / Master}\\[4pt]
+Ingénierie Électrique \textbullet{} Génie Électrique\\[8pt]
+\textcolor{accent}{\rule{0.5\textwidth}{0.5pt}}\\[8pt]
+{\small
+\begin{tabular}{ll}
+  \textbf{Thèmes couverts :} & Champs HT, Claquage, Corona, Paschen\\
+  & Surtensions, Génération, Mesure\\
+  & Coordination d'isolation, GIS\\
+  & Applications industrielles, Normes IEC/IEEE
+\end{tabular}
+}
+\end{tcolorbox}
+
+\vfill
+{\color{lightblue!70}\small\textit{Document pédagogique complet avec exemples numériques, graphiques et schémas}}\\[4pt]
+{\color{accent}\rule{\textwidth}{1pt}}
+{\color{textmed!50}\small\copyright~2024 — HV Engineering Course}
+\end{titlepage}
+
+%─── TABLE OF CONTENTS ────────────────────────────────────────────────────────
+\tableofcontents
+\clearpage
+
+%=============================================================================
+\chapter{Introduction}
+%=============================================================================
+
+\epigraph{\textit{``La haute tension est à la fois la clé du transport d'énergie moderne et
+le plus grand défi de l'ingénieur électricien.''}}{}
+
+\section{Définition des Hautes Tensions}
+
+La \textbf{haute tension} (HT) est définie par la norme \textbf{IEC 60038} comme toute
+tension dépassant certains seuils selon la nature du courant :
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Catégorie}} &
+\textcolor{white}{\textbf{Tension CA (rms)}} &
+\textcolor{white}{\textbf{Tension CC}} &
+\textcolor{white}{\textbf{Symbole}} \\
+\midrule
+Basse tension (BT)       & $< 1\,\si{kV}$        & $< 1.5\,\si{kV}$  & LV \\
+\rowcolor{lightgray}
+Haute tension (HT)       & $1 - 52\,\si{kV}$     & $1.5 - 75\,\si{kV}$ & HV \\
+Très haute tension (THT) & $52 - 800\,\si{kV}$   & $75 - 750\,\si{kV}$  & EHV \\
+\rowcolor{lightgray}
+Ultra haute tension (UHT)& $> 800\,\si{kV}$      & $> 750\,\si{kV}$     & UHV \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Domaines d'Application}
+
+Les hautes tensions sont présentes dans pratiquement tous les secteurs de l'énergie :
+
+\begin{itemize}
+  \item \textbf{Transport d'énergie électrique :} Les lignes THT (225\,kV, 400\,kV, 765\,kV)
+    minimisent les pertes Joule $P = RI^2$ sur de longues distances en réduisant le courant
+    $I = P/({\sqrt{3}\,V})$.
+
+  \item \textbf{Réseaux HVDC :} Liaisons en courant continu haute tension ($\pm$500\,kV à
+    $\pm$800\,kV) pour interconnexions continentales et raccordement d'éoliennes offshore.
+
+  \item \textbf{Industrie lourde :} Fours à arc (jusqu'à 100\,kV), électrolyse de l'aluminium
+    (700--1000\,V, 300\,kA), précipitateurs électrostatiques (50--100\,kV).
+
+  \item \textbf{Tests et qualification :} Essais de tenue diélectrique des équipements
+    (câbles, transformateurs, disjoncteurs, traversées).
+
+  \item \textbf{Applications scientifiques et médicales :} Accélérateurs de particules,
+    appareils de radiologie (40--150\,kV), lasers CO$_2$ industriels, spectromètres de masse.
+
+  \item \textbf{Télécommunications :} Alimentation des amplificateurs à tubes, radars,
+    émetteurs AM (50--400\,kW, alimentation HT 10--30\,kV).
+\end{itemize}
+
+\begin{retenir}{Pourquoi transporter en haute tension ?}
+La puissance transportée est $P = \sqrt{3}\,V\,I\,\cos\varphi$.
+Pour une puissance donnée, augmenter $V$ réduit $I$ proportionnellement.
+Les pertes en ligne étant $P_{\text{pertes}} = 3\,R\,I^2$, une ligne à 400\,kV
+transporte la même puissance qu'une ligne 20\,kV avec \textbf{400 fois moins de pertes} !
+\end{retenir}
+
+\section{Importance dans les Systèmes Modernes}
+
+La transition énergétique mondiale rend l'ingénierie HT encore plus stratégique :
+les énergies renouvelables (éolien offshore, solaire CSP en désert) sont souvent situées
+loin des centres de consommation. Le transport HT/HVDC est la seule solution technologique
+pour véhiculer ces gigawatts sur des milliers de kilomètres avec des pertes acceptables.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  % Simple overview of power system
+  \node[draw=hvgreen, fill=hvgreen!15, rounded corners, minimum width=2.2cm, minimum height=1cm]
+    (gen) at (0,0) {\small\textbf{Génération}\\[-2pt]\tiny 10--20\,kV};
+  \node[draw=midblue, fill=midblue!15, rounded corners, minimum width=2.2cm, minimum height=1cm]
+    (step1) at (3.5,0) {\small\textbf{Élévation}\\[-2pt]\tiny 400\,kV};
+  \node[draw=darkblue, fill=darkblue!15, rounded corners, minimum width=2.6cm, minimum height=1cm, text=white]
+    (trans) at (7.5,0) {\small\textbf{Transport THT}\\[-2pt]\tiny 225--765\,kV};
+  \node[draw=accent, fill=accent!15, rounded corners, minimum width=2.2cm, minimum height=1cm]
+    (step2) at (11.5,0) {\small\textbf{Abaissement}\\[-2pt]\tiny 63\,kV};
+  \node[draw=hvred, fill=hvred!10, rounded corners, minimum width=2.2cm, minimum height=1cm]
+    (dist) at (15,0) {\small\textbf{Distribution}\\[-2pt]\tiny 20\,kV/400\,V};
+
+  \draw[-Stealth, thick, midblue] (gen) -- (step1) node[midway, above, small] {};
+  \draw[-Stealth, thick, darkblue] (step1) -- (trans);
+  \draw[-Stealth, thick, darkblue] (trans) -- (step2);
+  \draw[-Stealth, thick, hvred] (step2) -- (dist);
+
+  % Labels
+  \node[below=0.3cm of gen, textmed, font=\footnotesize] {Centrale};
+  \node[below=0.3cm of step1, textmed, font=\footnotesize] {Transfo HT};
+  \node[below=0.3cm of trans, textmed, font=\footnotesize] {Lignes HT/THT};
+  \node[below=0.3cm of step2, textmed, font=\footnotesize] {Transfo BT};
+  \node[below=0.3cm of dist, textmed, font=\footnotesize] {Consommateurs};
+\end{tikzpicture}
+\caption{Schéma simplifié du réseau électrique — du producteur au consommateur}
+\end{figure}
+
+%=============================================================================
+\chapter{Rappels Fondamentaux}
+%=============================================================================
+
+\section{Champ Électrique et Potentiel}
+
+\subsection{Définitions}
+
+Le \textbf{champ électrique} $\vec{E}$ en un point est la force par unité de charge
+positive en ce point :
+\begin{equation}
+  \vec{E} = -\nabla V = -\text{grad}\,V \quad [\si{V/m}]
+\end{equation}
+
+Pour une charge ponctuelle $Q$ dans le vide :
+\begin{equation}
+  E(r) = \frac{Q}{4\pi\varepsilon_0\,r^2} \quad
+  \text{avec } \varepsilon_0 = 8.854 \times 10^{-12}\,\si{F/m}
+\end{equation}
+
+Le \textbf{potentiel électrique} $V$ en un point $P$ par rapport à l'infini est :
+\begin{equation}
+  V(P) = -\int_{\infty}^{P} \vec{E}\cdot d\vec{l} = \frac{Q}{4\pi\varepsilon_0\,r}
+\end{equation}
+
+\subsection{Champ Uniforme — Plaques Parallèles}
+
+Entre deux plaques conductrices infinies séparées d'une distance $d$ soumises à
+une différence de potentiel $U$, le champ est \textbf{uniforme} :
+\begin{equation}
+  \boxed{E = \frac{U}{d}} \quad [\si{V/m}]
+\end{equation}
+
+\begin{exemple}{Calcul du champ entre plaques parallèles}
+\textbf{Données :} $U = 100\,\si{kV}$, $d = 10\,\si{cm} = 0.10\,\si{m}$\\[4pt]
+\textbf{Calcul :}
+\[
+  E = \frac{U}{d} = \frac{100\,000}{0.10} = 1\,000\,000\,\si{V/m} = 1\,\si{MV/m}
+\]
+\textbf{Comparaison :} Le claquage de l'air se produit à $E_{\text{claquage}} \approx 3\,\si{MV/m}$\\
+$\Rightarrow$ Marge de sécurité = $3\,\si{MV/m} / 1\,\si{MV/m} = 3$ (facteur 3).
+\end{exemple}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.45\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % Plates
+  \fill[darkblue] (-0.3,-2) rectangle (0,2);
+  \fill[hvred] (4,-2) rectangle (4.3,2);
+  % Field lines with arrows
+  \foreach \y in {-1.5,-0.9,-0.3,0.3,0.9,1.5}{
+    \draw[-Stealth, lightblue, line width=1.2pt] (0.1,\y) -- (3.9,\y);
+  }
+  % Labels
+  \node[left, darkblue, font=\large\bfseries] at (-0.3,0) {$-$};
+  \node[right, hvred, font=\large\bfseries] at (4.3,0) {$+$};
+  \node[below, midblue, font=\small\itshape] at (2,-2.3) {$E = U/d$ (uniforme)};
+  \draw[<->, thick, accent] (0.1,-2.5) -- (3.9,-2.5) node[midway,below]{\small $d$};
+\end{tikzpicture}
+\caption{Champ uniforme — plaques parallèles}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.45\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % Field lines radiating
+  \foreach \angle in {0,30,...,330}{
+    \draw[-Stealth, hvred!70, line width=1pt]
+      ({0.3*cos(\angle)},{0.3*sin(\angle)}) --
+      ({2.2*cos(\angle)},{2.2*sin(\angle)});
+  }
+  % Equipotential circles
+  \foreach \r in {0.8, 1.3, 1.8}{
+    \draw[lightblue, dashed, opacity=0.6] (0,0) circle (\r);
+  }
+  \fill[hvred] (0,0) circle (0.25);
+  \node[white, font=\tiny\bfseries] at (0,0) {$+Q$};
+  \node[below, midblue, font=\small\itshape] at (0,-2.5)
+    {$E = Q/(4\pi\varepsilon_0 r^2)$};
+  \node[lightblue, font=\tiny] at (1.3, 0.9) {équipotentielles};
+\end{tikzpicture}
+\caption{Champ non uniforme — charge ponctuelle}
+\end{subfigure}
+\caption{Champ électrique uniforme et non uniforme. Les lignes bleues représentent
+les lignes de champ, les cercles tiretés les équipotentielles.}
+\end{figure}
+
+\section{Loi de Gauss}
+
+La \textbf{loi de Gauss} relie le flux du champ électrique à travers une surface
+fermée $\mathcal{S}$ à la charge totale $Q_{\text{enc}}$ enfermée :
+\begin{equation}
+  \oint_{\mathcal{S}} \vec{E}\cdot d\vec{A} = \frac{Q_{\text{enc}}}{\varepsilon_0}
+\end{equation}
+
+\subsection{Application — Câble Coaxial (Câble HT)}
+
+\begin{wrapfigure}{r}{0.38\textwidth}
+\vspace{-10pt}
+\begin{tikzpicture}[scale=1.0]
+  % Outer conductor
+  \fill[bordergray!60] (0,0) circle (2.2);
+  % Insulation
+  \fill[accent!20] (0,0) circle (2.0);
+  % Inner conductor
+  \fill[midblue!60] (0,0) circle (0.6);
+  % Labels
+  \draw[<->, thick] (0,0) -- (0.6,0) node[midway, above, font=\small]{$a$};
+  \draw[<->, thick] (0,0) -- (0,-2.0) node[midway, right, font=\small]{$R$};
+  \node[white, font=\small\bfseries] at (0,0) {HT};
+  \node[font=\small, textmed] at (0, -2.5) {Isolant ($\varepsilon_r$)};
+  % E field arrow
+  \draw[-Stealth, hvred, thick] (0.65,0) -- (1.8,0)
+    node[midway, above, font=\small]{$E(r)$};
+\end{tikzpicture}
+\vspace{-6pt}
+\caption{Câble coaxial}
+\end{wrapfigure}
+
+Pour un câble coaxial de rayon interne $a$ et externe $R$, la loi de Gauss
+en coordonnées cylindriques donne :
+\begin{equation}
+  \boxed{E(r) = \frac{U}{r\,\ln\!\left(\dfrac{R}{a}\right)}}
+  \quad (a \leq r \leq R)
+\end{equation}
+
+Le champ est \textbf{maximal} en $r = a$ (surface interne) :
+\begin{equation}
+  E_{\max} = \frac{U}{a\,\ln\!\left(\dfrac{R}{a}\right)}
+\end{equation}
+
+Le rapport optimal $R/a$ minimisant $E_{\max}$ pour un rayon extérieur $R$ fixé
+est obtenu en résolvant $\partial E_{\max}/\partial a = 0$, ce qui donne $R/a = e \approx 2.718$.
+
+\begin{infobox}{Implication pour la conception des câbles HT}
+Le concepteur cherche à maximiser $a$ (rayon du conducteur) pour réduire $E_{\max}$,
+tout en limitant le diamètre extérieur $R$ pour des raisons de coût. Le compromis
+optimal donne $R/a \approx e$ pour un câble monophasé.
+\end{infobox}
+
+\section{Distribution du Champ — Géométries Courantes}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Géométrie}} &
+\textcolor{white}{\textbf{Expression de $E(r)$ ou $E$}} &
+\textcolor{white}{\textbf{Caractéristique}} \\
+\midrule
+Plaques parallèles & $E = U/d$ & Uniforme \\
+\rowcolor{lightgray}
+Sphères concentriques & $E(r) = \dfrac{U\,ab}{b-a}\cdot\dfrac{1}{r^2}$ & $\propto 1/r^2$ \\
+Cylindres coaxiaux & $E(r) = \dfrac{U}{r\ln(R/a)}$ & $\propto 1/r$ \\
+\rowcolor{lightgray}
+Pointe--plan & Numérique / FEM & Très non uniforme \\
+Sphère--plan & Numérique / FEM & Non uniforme \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Propriétés des Matériaux Diélectriques}
+
+\subsection{Permittivité et Polarisation}
+
+Dans un diélectrique, le déplacement électrique est :
+\begin{equation}
+  \vec{D} = \varepsilon_0\,\varepsilon_r\,\vec{E} = \varepsilon_0\,\vec{E} + \vec{P}
+\end{equation}
+où $\vec{P} = \varepsilon_0(\varepsilon_r - 1)\vec{E}$ est la \textbf{polarisation diélectrique}.
+La polarisation peut être dipolaire (orientationnelle), ionique ou électronique.
+
+\subsection{Tableau des Matériaux Isolants HT}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lccXl}
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Matériau}} &
+\textcolor{white}{\textbf{$\varepsilon_r$}} &
+\textcolor{white}{\textbf{$E_{\rm rupt}$ (kV/mm)}} &
+\textcolor{white}{\textbf{Avantages}} &
+\textcolor{white}{\textbf{Application}} \\
+\midrule
+Air (1 atm, 20°C) & 1.0006 & $\approx$3 & Gratuit, auto-cicatrisant & Lignes aériennes \\
+\rowcolor{lightgray}
+SF$_6$ (3 bar, 20°C) & 1.002 & 8--9 & Rigidité 3× l'air & Disjoncteurs GIS \\
+Huile minérale & 2.2--2.5 & 10--15 & Bonne tenue thermique & Transformateurs \\
+\rowcolor{lightgray}
+Papier imprégné huile & 3.5--4.0 & 20--30 & Combiné thermique & Câbles OFHV \\
+XLPE (polyéthylène réticulé) & 2.3 & 20--40 & Léger, pas de liquide & Câbles THT modernes \\
+\rowcolor{lightgray}
+Porcelaine & 6--7 & 10--12 & Résistance mécanique & Isolateurs aériens \\
+Verre trempé & 7--8 & 10--14 & Défaut visible & Chaînes d'isolateurs \\
+\rowcolor{lightgray}
+Silicone RTV & 3.5--4.5 & 15--20 & Hydrophobicité & Isolateurs pollution \\
+Époxy (résine) & 3.5--5.0 & 15--25 & Bonne moulabilité & Traversées HT \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{warnbox}{Dépendance en fréquence et en température}
+La permittivité $\varepsilon_r$ et la rigidité diélectrique varient avec la fréquence, la
+température et l'humidité. Une augmentation de température de 20°C peut réduire la rigidité
+de l'huile de 20--30\%. Les essais doivent donc être réalisés dans des conditions normalisées
+(23°C ± 2°C, 50\% HR selon IEC 60243).
+\end{warnbox}
+
+%=============================================================================
+\chapter{Phénomènes en Haute Tension}
+%=============================================================================
+
+\section{Mécanismes de Claquage dans les Gaz}
+
+\subsection{Théorie de Townsend}
+
+Le \textbf{claquage gazeux} résulte d'une avalanche électronique auto-entretenue.
+La théorie de Townsend (1910) repose sur deux coefficients :
+
+\begin{formulebox}{Coefficients de Townsend}
+\begin{align}
+  &\alpha \quad \text{(1\textsuperscript{er} coefficient)} = \text{ionisations par électron par unité de longueur} \\
+  &\gamma \quad \text{(2\textsuperscript{e} coefficient)} = \text{électrons secondaires émis par ion frappant la cathode}
+\end{align}
+
+Après $d$ de parcours, un électron génère $e^{\alpha d}$ électrons.
+\textbf{Condition de claquage de Townsend :}
+\[
+  \gamma\left(e^{\alpha d} - 1\right) = 1
+  \quad \Longrightarrow \quad
+  e^{\alpha d} = 1 + \frac{1}{\gamma}
+\]
+\end{formulebox}
+
+\begin{exemple}{Calcul du coefficient $\alpha$ dans l'air}
+Dans l'air à pression atmosphérique, $\alpha$ est approximé par la formule de Townsend :
+\[
+  \alpha = A \cdot p \cdot \exp\!\left(-\frac{B\cdot p}{E}\right)
+\]
+avec pour l'air : $A = 15\,\si{cm^{-1}bar^{-1}}$, $B = 365\,\si{V/(cm\cdot bar)}$\\[6pt]
+Pour $E = 30\,\si{kV/cm}$ et $p = 1\,\si{bar}$ :
+\[
+  \alpha = 15 \times 1 \times \exp\!\left(-\frac{365}{30\,000 \times 10^{-3}}\right)
+  \approx 15\,\si{cm^{-1}}
+\]
+\end{exemple}
+
+\subsection{Mécanisme de Streamer}
+
+Pour les grands espaces et les hautes pressions, le mécanisme de \textbf{streamer} prédomine :
+\begin{itemize}
+  \item Les charges d'espace créées par l'avalanche déforment le champ local.
+  \item Des filaments ionisés se propagent à grande vitesse ($10^5$--$10^6\,\si{m/s}$).
+  \item Le claquage se produit en une seule traversée (sans nécessiter $\gamma$).
+  \item Condition de streamer (Meek) : $\alpha x_c \approx 18$--20 pour l'air.
+\end{itemize}
+
+\section{Claquage dans les Liquides}
+
+Dans les isolants liquides (huile de transformateur), plusieurs mécanismes coexistent :
+
+\begin{itemize}
+  \item \textbf{Formation de bulles gazeuses :} cavitation par décharges locales, vaporisation
+    par échauffement $\rightarrow$ claquage dans la bulle gazeuse (moins rigide).
+  \item \textbf{Migration de particules :} les particules conductrices ou semi-conductrices
+    s'alignent sous l'effet du champ et forment un pont conducteur (``bridging'').
+  \item \textbf{Ionisation directe :} pour des champs très élevés ($>$100\,MV/m), injection
+    directe d'électrons depuis les électrodes.
+  \item \textbf{Claquage de zone :} zones de faible rigidité autour des impuretés.
+\end{itemize}
+
+\begin{infobox}{Effet de la propreté sur la rigidité de l'huile}
+Une huile de transformateur propre (filtrée, déshydratée, dégazée) peut atteindre
+$E_{\text{claquage}} \geq 80\,\si{kV/cm}$ (essai normalisé IEC 60156).
+La présence de $0.01\%$ d'eau peut la réduire à moins de $20\,\si{kV/cm}$ !
+\end{infobox}
+
+\section{Claquage dans les Solides}
+
+Le claquage des solides est généralement \textbf{irréversible} et catastrophique :
+
+\begin{enumerate}
+  \item \textbf{Claquage électronique pur} (intrinsèque) : très rapide ($< 10^{-8}\,\si{s}$),
+    dû à une avalanche dans la bande de conduction. $E_{\text{claquage}}$ peut atteindre
+    $10^3\,\si{MV/m}$ pour des films minces parfaits.
+  \item \textbf{Claquage thermique :} la puissance dissipée $P = \sigma E^2$ augmente
+    la conductivité $\sigma$ $\rightarrow$ emballement thermique. Prédomine à haute
+    température ou fréquence.
+  \item \textbf{Claquage électromécanique :} les forces de Maxwell $P_{\text{méca}} = \varepsilon_0\varepsilon_r E^2/2$
+    compriment le diélectrique jusqu'à son effondrement mécanique.
+  \item \textbf{Claquage par ``treeing'' :} formation d'arborescences de décharges
+    partielles progressant sur des heures à des années avant rupture finale.
+\end{enumerate}
+
+\section{Loi de Paschen}
+
+\subsection{Énoncé et Formulation}
+
+La \textbf{loi de Paschen} (1889) stipule que la tension de claquage $V_b$ dans un gaz
+homogène est uniquement fonction du produit pression $\times$ distance ($p \cdot d$) :
+\begin{equation}
+  \boxed{V_b = f(p \cdot d)}
+\end{equation}
+
+La formulation analytique est :
+\begin{equation}
+  V_b = \frac{B\,(p\cdot d)}{\ln(A\,p\cdot d) - \ln\!\left[\ln\!\left(1 + \dfrac{1}{\gamma}\right)\right]}
+  \label{eq:paschen}
+\end{equation}
+
+Pour l'air : $A = 11.5\,\si{Pa^{-1}m^{-1}}$, $B = 364\,\si{V\cdot Pa^{-1}m^{-1}}$,
+$\gamma \approx 0.01$.
+
+\subsection{Courbe de Paschen et Minimum}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+  width=0.85\textwidth, height=7cm,
+  xlabel={Produit $p \cdot d$ (Pa$\cdot$m)},
+  ylabel={Tension de claquage $V_b$ (V)},
+  xmin=0.5, xmax=1000,
+  ymin=0, ymax=3000,
+  grid=both, grid style={dotted, gray!40},
+  legend pos=north east,
+  title style={color=darkblue},
+  title={Courbe de Paschen — Air ($\gamma = 0.01$)},
+  axis background/.style={fill=lightgray!30},
+  tick label style={font=\small},
+  label style={font=\small, color=textdark},
+]
+% Paschen curve for air (approximated numerically)
+\addplot[
+  darkblue, thick, smooth, line width=2pt,
+  domain=1:1000, samples=200,
+] {364*x/(ln(11.5*x) - ln(ln(1+100)))};
+
+% Minimum marker
+\addplot[
+  only marks, mark=*, mark size=4pt,
+  accent, line width=2pt
+] coordinates {(7.5, 327)};
+
+% Annotation lines
+\addplot[dashed, accent, opacity=0.7] coordinates {(7.5, 0) (7.5, 327)};
+\addplot[dashed, accent, opacity=0.7] coordinates {(0.5, 327) (7.5, 327)};
+
+\node[anchor=west, font=\small, color=hvred] at (axis cs:9, 370)
+  {Minimum : $V_{\min}\approx327\,\text{V}$};
+\node[anchor=west, font=\small, color=hvred] at (axis cs:9, 220)
+  {$p\cdot d \approx 0.76\,\text{Pa\!\cdot\!m}$};
+
+\addlegendentry{$V_b = f(p\cdot d)$ — Air}
+\addlegendentry{Minimum de Paschen}
+
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{Courbe de Paschen pour l'air. La tension de claquage présente un minimum
+(``minimum de Paschen'') autour de $p\cdot d \approx 0.76\,\si{Pa\cdot m}$.}
+\end{figure}
+
+\begin{retenir}{Interprétation physique de la courbe de Paschen}
+\begin{itemize}
+  \item \textbf{À gauche du minimum (faible $p\cdot d$)} : les électrons parcourent de
+    longues distances sans collision $\rightarrow$ peu d'ionisations $\rightarrow$ besoin de
+    champ très élevé.
+  \item \textbf{À droite du minimum (fort $p\cdot d$)} : les électrons perdent leur énergie
+    rapidement par collisions $\rightarrow$ besoin de champ plus élevé pour maintenir
+    l'ionisation.
+  \item \textbf{Au minimum} : conditions optimales d'ionisation. C'est la zone la plus
+    ``dangereuse'' car le claquage se produit à la tension minimale.
+\end{itemize}
+Applications : vide (gauche), pression atmosphérique (droite), SF$_6$ sous pression (très à droite).
+\end{retenir}
+
+\section{Effet Corona}
+
+\subsection{Définition et Mécanisme}
+
+L'\textbf{effet corona} (ou décharge couronne) est une ionisation locale de l'air autour
+d'un conducteur à fort champ de surface ($E_{\text{surface}} > E_{\text{critique}}$) sans
+qu'il y ait claquage complet.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % Dark background circle
+  \fill[darkblue!90] (0,0) circle (3.5);
+  % Corona glow layers
+  \foreach \r/\op in {0.5/0.7, 0.8/0.5, 1.1/0.4, 1.5/0.3, 2.0/0.2, 2.6/0.1}{
+    \draw[lightblue!\the\numexpr int(90*\op)\relax, opacity=\op,
+          line width=\r*2pt] (0,0) circle (\r);
+  }
+  % Conductor
+  \fill[white!70] (0,0) circle (0.3);
+  \node[font=\footnotesize\bfseries, darkblue] at (0,0) {HT};
+  % Field lines
+  \foreach \a in {0,30,...,330}{
+    \draw[-Stealth, accent!80, opacity=0.8, line width=1pt]
+      ({0.35*cos(\a)},{0.35*sin(\a)}) -- ({2.5*cos(\a)},{2.5*sin(\a)});
+  }
+  % Ion markers
+  \foreach \a/\r in {15/0.7, 60/0.9, 105/0.8, 160/1.0, 200/0.75, 250/0.85,
+                     295/0.95, 340/0.7}{
+    \node[font=\tiny, yellow!90!orange] at ({(\r)*cos(\a)},{(\r)*sin(\a)}) {$\star$};
+  }
+  % Labels
+  \node[white, font=\small, anchor=west] at (2.7, 1.5) {Zone d'ionisation};
+  \node[accent, font=\small, anchor=west] at (2.7, 0.8) {Lignes de champ $\vec{E}$};
+  \node[yellow!80, font=\small, anchor=west] at (2.7, 0.1) {$\star$ Ions/électrons};
+\end{tikzpicture}
+\caption{Effet corona autour d'un conducteur cylindrique sous haute tension.
+La zone bleue lumineuse représente la région ionisée (plasma partiel).}
+\end{figure}
+
+Pour un conducteur cylindrique de rayon $a$, le corona commence quand :
+\begin{equation}
+  E(r=a) = \frac{U}{a\,\ln(R/a)} > E_{\text{critique}} \approx 2.1\,\si{MV/m}
+  \left(1 + \frac{0.03}{\sqrt{a}}\right) \quad \text{(formule de Peek)}
+\end{equation}
+
+\subsection{Conséquences de l'Effet Corona}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Effet}} &
+\textcolor{white}{\textbf{Description}} &
+\textcolor{white}{\textbf{Ordre de grandeur}} \\
+\midrule
+Pertes d'énergie & Consommation parasite permanente & 0.5--5\% de la puissance \\
+\rowcolor{lightgray}
+Bruit audible & Sifflement/crépitement (100 Hz) & 40--65 dB(A) à 30 m \\
+Interférences EM & Perturbations radio AM (0.5--30 MHz) & Jusqu'à 60 dB$\mu$V/m \\
+\rowcolor{lightgray}
+Production O$_3$ & Corrosion métaux, dégradation caoutchouc & 10--100 ng/J \\
+Érosion conducteur & Piqûres de surface & Durée vie réduite \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Décharges Partielles (DP)}
+
+\subsection{Définition et Modèle}
+
+Les \textbf{décharges partielles} sont des ruptures locales d'isolation dans des
+cavités gazeuses incluses dans l'isolation solide ou liquide. Elles ne traversent
+pas complètement l'isolant mais l'érodent progressivement.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.2]
+  % Main dielectric
+  \fill[accent!15] (0,0) rectangle (8,3);
+  \draw[midblue, thick] (0,0) rectangle (8,3);
+  % Electrodes
+  \fill[darkblue!80] (0,3) rectangle (8,3.4);
+  \fill[darkblue!80] (0,-0.4) rectangle (8,0);
+  \node[white, font=\small\bfseries] at (4, 3.2) {Électrode HT};
+  \node[white, font=\small\bfseries] at (4, -0.2) {Électrode GND};
+  % Void (cavity)
+  \fill[lightblue!40] (3.5,1.2) ellipse (1.2 and 0.5);
+  \draw[hvred, thick] (3.5,1.2) ellipse (1.2 and 0.5);
+  \node[hvred, font=\small\bfseries] at (3.5,1.2) {Cavité (gaz)};
+  % Discharge symbol in void
+  \draw[hvred, line width=2pt] (3.0,1.2) -- (3.3,1.5) -- (3.6,1.0) -- (3.9,1.4);
+  \node[hvred, font=\scriptsize, above] at (3.5,1.7) {DP};
+  % Equivalent circuit
+  \node[font=\small, textdark] at (6.5,1.5) {$C_{\rm void}$, $C_{\rm series}$, $C_{\rm parallel}$};
+  % Labels
+  \node[textmed, font=\small] at (1.5,2.2) {Diélectrique};
+  \node[textmed, font=\small] at (1.5,0.7) {Solide/Liquide};
+\end{tikzpicture}
+\caption{Modèle d'une décharge partielle dans une cavité gazeuse incluse
+dans un diélectrique solide sous tension alternative.}
+\end{figure}
+
+La charge de DP est exprimée en \textbf{picocoulombs (pC)} :
+\begin{equation}
+  Q_{\rm DP} = C_{\rm void} \cdot \Delta V_{\rm cav} \quad [\si{pC}]
+\end{equation}
+
+\begin{warnbox}{Impact des DP sur la durée de vie}
+Chaque décharge partielle dépose de l'énergie ($W = Q^2/(2C)$) qui érode chimiquement
+et thermiquement l'isolant. Sous DP continues à 50 Hz :
+\begin{itemize}
+  \item Câble XLPE 150 kV : durée de vie réduite de 40 ans à quelques années si DP $>$ 50 pC.
+  \item Transformateur : dégradation du papier accélérée, production de gaz (H$_2$, CH$_4$).
+  \item Règle d'or : maintenir les DP en dessous des seuils IEC 60270 (voir tableau).
+\end{itemize}
+\end{warnbox}
+
+%=============================================================================
+\chapter{Surtensions}
+%=============================================================================
+
+\section{Classification des Surtensions}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Type}} &
+\textcolor{white}{\textbf{Durée}} &
+\textcolor{white}{\textbf{Amplitude}} &
+\textcolor{white}{\textbf{Origine}} \\
+\midrule
+Temporaire (TOV)      & ms à min  & 1.2--1.5 $U_n$ & Défauts réseau, Ferranti \\
+\rowcolor{lightgray}
+Manœuvre (SOV)        & 0.1--20 ms & 2--4 $U_n$     & Commutation disjoncteurs \\
+Foudre (LI)           & 1--100 µs  & 5--20 $U_n$    & Impact ou induction \\
+\rowcolor{lightgray}
+VFTO (GIS)            & 10 ns      & 2--2.5 $U_n$   & Opérations dans GIS \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Surtensions Atmosphériques — Foudre}
+
+\subsection{Physique du Coup de Foudre}
+
+\begin{enumerate}
+  \item Séparation des charges dans le cumulonimbus par processus de précipitation.
+  \item Le champ au sol atteint 3--10 kV/m $\rightarrow$ ionisation descendante.
+  \item Jonction traceur descendant / traceur ascendant à 100--300 m du sol.
+  \item Arc de retour lumineux (foudre visible) : courant montant à $\approx 10^8\,\si{m/s}$.
+  \item Courant crête : typiquement 30 kA (médiane), max. 300 kA (cas extrêmes).
+\end{enumerate}
+
+\subsection{Forme d'Onde Normalisée IEC 60060-1}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.85\textwidth, height=6cm,
+  xlabel={Temps ($\mu$s)},
+  ylabel={Tension normalisée $u/U_{\rm peak}$},
+  xmin=-5, xmax=200,
+  ymin=-0.1, ymax=1.2,
+  grid=both, grid style={dotted, gray!40},
+  axis background/.style={fill=lightgray!20},
+  tick label style={font=\small},
+  label style={font=\small},
+  title={Onde de choc foudre normalisée 1.2/50 $\mu$s},
+  title style={color=darkblue, font=\normalsize\bfseries},
+]
+% Lightning impulse shape approximation
+\addplot[hvred, thick, line width=2pt, smooth, samples=300, domain=0:200]
+  {max(0, (1 - exp(-x/1.2)) * exp(-x/50))/(0.368)};
+
+% 90% and 30% lines
+\addplot[dashed, midblue, opacity=0.7] coordinates {(-5,0.9) (200,0.9)}
+  node[right, font=\scriptsize]{90\%};
+\addplot[dashed, midblue, opacity=0.7] coordinates {(-5,0.3) (200,0.3)}
+  node[right, font=\scriptsize]{30\%};
+\addplot[dashed, accent, opacity=0.8] coordinates {(-5,0.5) (200,0.5)}
+  node[right, font=\scriptsize]{50\% ($T_2$)};
+\addplot[dashed, hvgreen, opacity=0.7] coordinates {(-5,1.0) (200,1.0)}
+  node[right, font=\scriptsize]{$U_{\rm peak}$};
+
+% Annotations
+\draw[->, hvred, thick] (axis cs:1.2, 0) -- (axis cs:1.2, 0.9);
+\node[hvred, font=\scriptsize, above] at (axis cs:5, 0.93) {$T_1=1.2\,\mu$s};
+\draw[->, hvgreen!70!black, thick] (axis cs:50, 0) -- (axis cs:50, 0.5);
+\node[accent, font=\scriptsize] at (axis cs:70, 0.53) {$T_2=50\,\mu$s};
+
+\end{axis}
+\end{tikzpicture}
+\caption{Onde de choc foudre 1.2/50 µs selon IEC 60060-1. $T_1 = 1.2\,\mu$s (temps de
+front), $T_2 = 50\,\mu$s (temps de queue à mi-crête).}
+\end{figure}
+
+\section{Surtensions de Manœuvre}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.85\textwidth, height=6cm,
+  xlabel={Temps ($\mu$s)},
+  ylabel={Tension normalisée},
+  xmin=-50, xmax=8000,
+  ymin=-0.1, ymax=1.25,
+  grid=both, grid style={dotted, gray!40},
+  axis background/.style={fill=lightgray!20},
+  tick label style={font=\small},
+  label style={font=\small},
+  title={Onde de manœuvre normalisée 250/2500 $\mu$s},
+  title style={color=darkblue, font=\normalsize\bfseries},
+]
+\addplot[midblue, thick, line width=2pt, smooth, samples=300, domain=0:8000]
+  {(1 - exp(-x/250)) * exp(-x/2500) / 0.7829};
+
+\addplot[dashed, accent, opacity=0.8] coordinates {(-50,1.0) (8000,1.0)}
+  node[right, font=\scriptsize]{Crête};
+\addplot[dashed, hvgreen, opacity=0.7] coordinates {(-50,0.5) (8000,0.5)}
+  node[right, font=\scriptsize]{50\%};
+
+\draw[->, midblue!80, thick] (axis cs:250, 0) -- (axis cs:250, 0.632);
+\node[midblue, font=\scriptsize, above right] at (axis cs:250, 0.65)
+  {$T_1=250\,\mu$s};
+\draw[->, hvgreen!80, thick] (axis cs:2500, 0) -- (axis cs:2500, 0.5);
+\node[hvgreen!70!black, font=\scriptsize, above right] at (axis cs:2500, 0.52)
+  {$T_2=2500\,\mu$s};
+\end{axis}
+\end{tikzpicture}
+\caption{Onde de manœuvre 250/2500 µs selon IEC 60060-1. Beaucoup plus lente que la
+foudre, elle sollicite davantage l'isolation interne des équipements.}
+\end{figure}
+
+\section{Protection contre les Surtensions}
+
+\subsection{Parafoudres à Oxyde Métallique (MOV)}
+
+Les \textbf{parafoudres ZnO} (zinc oxide) sont les dispositifs de protection standard.
+Leur caractéristique courant-tension est fortement non linéaire :
+\begin{equation}
+  I = k \cdot V^{\,\alpha} \quad \text{avec } \alpha = 25\text{--}100
+\end{equation}
+
+En service normal ($V < V_{\text{ref}}$) : $I < 1\,\si{mA}$ (quasi-isolant).\\
+En surtension ($V > V_{\text{ref}}$) : limitation à $V_{\text{protection}} = V_{\text{ref}} \times (1 + \varepsilon)$.
+
+\begin{retenir}{Sélection d'un parafoudre}
+Le parafoudre est caractérisé par :
+\begin{itemize}
+  \item $U_c$ : tension continue de service maximale
+  \item $U_r$ : tension assignée (tenue pendant 10 s)
+  \item $U_p$ : niveau de protection (à $I_n$ nominal)
+  \item $I_n$ : courant de choc nominal (typiquement 5--20 kA)
+\end{itemize}
+Critère de coordination : $U_p \times 1.15 \leq \text{NIL}$ de l'équipement protégé.
+\end{retenir}
+
+%=============================================================================
+\chapter{Génération des Hautes Tensions}
+%=============================================================================
+
+\section{Génération Haute Tension Alternative (AC)}
+
+\subsection{Transformateur de Test}
+
+Le \textbf{transformateur de test} est le moyen le plus courant de générer des tensions
+alternatives jusqu'à quelques MV. Pour des tensions très élevées, on utilise des montages
+en \textbf{cascade} :
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.9,
+  component/.style={draw=midblue, fill=midblue!10, rounded corners, minimum width=2cm, minimum height=1.2cm}
+]
+  % Stage 1
+  \node[component] (T1) at (0,0) {\textbf{T$_1$}\\[2pt]\footnotesize $V_1 = 100\,\si{kV}$};
+  % Stage 2
+  \node[component] (T2) at (3.5,1.5) {\textbf{T$_2$}\\[2pt]\footnotesize $V_2 = 100\,\si{kV}$};
+  % Stage 3
+  \node[component] (T3) at (7,3.0) {\textbf{T$_3$}\\[2pt]\footnotesize $V_3 = 100\,\si{kV}$};
+  % Connections
+  \draw[hvred, thick, -Stealth] (T1.north) -- ++(0,0.8) -| (T2.south west);
+  \draw[hvred, thick, -Stealth] (T2.north) -- ++(0,0.8) -| (T3.south west);
+  % Output
+  \draw[hvred, very thick, -Stealth] (T3.east) -- ++(1.5,0)
+    node[right, hvred, font=\bfseries\normalsize]{$V_{\rm out} = 300\,\si{kV}$};
+  % Ground
+  \draw[darkblue, thick] (T1.south) -- ++(0,-0.5) node[below, font=\small]{$\perp$ GND};
+  % Excitation
+  \draw[accent, thick, -Stealth] (-2,0) -- (T1.west)
+    node[midway, above, font=\small, accent]{$V_{\rm in} = 10\,\si{kV}$};
+  % Labels
+  \node[textmed, font=\footnotesize] at (3.5,-0.8) {Montage en cascade (3 étages)};
+\end{tikzpicture}
+\caption{Transformateurs de test en cascade. Chaque étage isole uniquement sa propre
+tension, simplifiant la conception de l'isolation à la masse.}
+\end{figure}
+
+\subsection{Résonance série — Test des Câbles}
+
+Pour les câbles longs (forte capacité), la puissance réactive est compensée par une
+inductance accordée en résonance :
+\begin{equation}
+  L_{\rm res} = \frac{1}{\omega^2 C_{\rm câble}}, \quad
+  Q = \frac{V_{\rm câble}}{V_{\rm source}} = \frac{\omega L_{\rm res}}{R}
+\end{equation}
+Le facteur de qualité $Q$ peut atteindre 50--100, permettant de générer 100 kV
+avec une alimentation de seulement 1--2 kV. Très économique pour les essais de câbles.
+
+\section{Génération Haute Tension Continue (DC)}
+
+\subsection{Multiplicateur de Cockroft-Walton}
+
+Le \textbf{multiplicateur de Cockroft-Walton} (1932) génère une tension DC
+très élevée à partir d'une source AC par rectification et multiplication :
+
+\begin{equation}
+  V_{\rm DC} = 2n\,V_{\rm AC,peak} - \frac{n(n+1)(2n+1)}{6f C}\,I_{\rm charge}
+\end{equation}
+
+où $n$ = nombre d'étages, $f$ = fréquence, $C$ = capacité des condensateurs.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  scale=1.0,
+  diode/.style={draw=hvred, fill=hvred!20, isosceles triangle, isosceles triangle apex angle=60,
+                minimum size=0.5cm},
+]
+  % Simplified 3-stage CW multiplier
+  \def\Vac{0}; % just for labels
+
+  % Nodes
+  \foreach \n/\x/\y in {A/0/0, B/0/2, C/2/0, D/2/2, E/4/0, F/4/2, G/6/2}{
+    \coordinate (\n) at (\x, \y);
+  }
+  % Capacitors (vertical)
+  \foreach \cx/\cy/\lab in {0/1/C_1, 2/1/C_2, 4/1/C_3}{
+    \draw[midblue, thick] (\cx,{\cy-0.3}) -- (\cx,{\cy-0.1});
+    \draw[midblue, thick] ({\cx-0.3},{\cy-0.1}) -- ({\cx+0.3},{\cy-0.1});
+    \draw[midblue, thick] ({\cx-0.3},{\cy+0.1}) -- ({\cx+0.3},{\cy+0.1});
+    \draw[midblue, thick] (\cx,{\cy+0.1}) -- (\cx,{\cy+0.3});
+    \node[midblue, font=\scriptsize, right] at ({\cx+0.35},\cy) {$\lab$};
+  }
+  % Diodes (horizontal)
+  \foreach \dx/\dy in {1/0, 3/0, 5/0, 1/2, 3/2, 5/2}{
+    \draw[hvred, thick, -Stealth] (\dx,\dy) -- ({\dx+0.6},\dy);
+  }
+  % Horizontal wires
+  \draw[darkblue, thick] (0,0) -- (6,0);
+  \draw[darkblue, thick] (0,2) -- (6,2);
+  % AC source
+  \draw[accent, thick] (-1,1) circle (0.5);
+  \node[accent, font=\small] at (-1,1) {$\sim$};
+  \draw[accent] (-0.5,1) -- (0,1);
+  \draw[accent] (0,1) -- (0,0); \draw[accent] (0,1) -- (0,2);
+  % Output
+  \draw[hvred, very thick] (6,0) -- (6.5,0);
+  \draw[hvred, very thick] (6,2) -- (6.5,2);
+  \node[hvred, font=\normalsize\bfseries, right] at (6.5,1) {$+6\,V_{\rm peak}$};
+  % GND
+  \draw[darkblue] (0,0) -- (0,-0.5) node[below, font=\small]{GND};
+\end{tikzpicture}
+\caption{Multiplicateur de Cockroft-Walton (3 étages). Chaque étage double la tension :
+$V_{\rm DC} = 2n\,V_{\rm AC,peak}$.}
+\end{figure}
+
+\section{Génération d'Impulsions — Générateur de Marx}
+
+\subsection{Principe de Fonctionnement}
+
+Le \textbf{générateur de Marx} (1923) est le circuit standard mondial pour les essais
+d'impulsions de tension simulant la foudre. Son principe fondamental est simple et
+élégant :
+
+\begin{itemize}
+  \item \textbf{Phase de charge :} Tous les condensateurs $C_1 \cdots C_n$ se chargent
+    \textit{en parallèle} à la tension $V_c$ via les résistances $R_{\rm charge}$.
+  \item \textbf{Déclenchement :} L'amorçage du premier éclateur en déclenche d'autres en
+    cascade, reconnectant les condensateurs \textit{en série}.
+  \item \textbf{Phase de décharge :} Tension de sortie $V_{\rm out} = n \cdot V_c$.
+  \item \textbf{Mise en forme :} La résistance $R_1$ façonne le front, $R_2$ la queue.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0,
+  cap/.style={draw=midblue, fill=midblue!10, rectangle, minimum width=0.3cm, minimum height=0.8cm},
+  gap/.style={draw=hvred, fill=hvred!15, circle, minimum size=0.5cm, inner sep=1pt},
+]
+  % 4-stage Marx generator
+  \def\stg{4}
+  \foreach \i in {1,...,\stg}{
+    \pgfmathsetmacro\x{(\i-1)*3.2}
+    % Capacitor
+    \fill[midblue!15] ({\x+0.5},0) rectangle ({\x+0.9}, 3.5);
+    \draw[midblue, thick] ({\x+0.7}, 0.3) -- ({\x+0.7}, 1.5);
+    \draw[midblue, thick] ({\x+0.3}, 1.5) -- ({\x+1.1}, 1.5);
+    \draw[midblue, thick] ({\x+0.3}, 1.7) -- ({\x+1.1}, 1.7);
+    \draw[midblue, thick] ({\x+0.7}, 1.7) -- ({\x+0.7}, 3.2);
+    \node[midblue, font=\footnotesize] at ({\x+0.7},-0.4) {$C_{\i}$};
+    \node[midblue, font=\scriptsize] at ({\x+0.7},-0.8) {$V_c=100\,\si{kV}$};
+    % Spark gap
+    \ifnum\i<\stg
+      \fill[hvred!20] ({\x+1.8}, 1.6) circle (0.3);
+      \draw[hvred, thick] ({\x+1.8}, 1.6) circle (0.3);
+      \node[hvred, font=\tiny\bfseries] at ({\x+1.8},1.6) {EG};
+      % Charging resistors (top)
+      \draw[accent, thick, decorate, decoration={zigzag,amplitude=2pt,segment length=4pt}]
+        ({\x+0.7},3.2) -- ({\x+3.2+0.7},3.2);
+      \node[accent, font=\tiny, above] at ({\x+2.0},3.25) {$R_c$};
+    \fi
+  }
+  % Output waveshaping
+  \pgfmathsetmacro\xout{(\stg)*3.2}
+  \draw[hvred, very thick, -Stealth] ({\xout+0.0},1.6) -- ({\xout+1.5},1.6)
+    node[right, hvred, font=\bfseries]
+      {$V_{\rm out}=\stg\times100 = 400\,\si{kV}$};
+  % R1 (front)
+  \draw[hvred, thick, decorate, decoration={zigzag,amplitude=2pt,segment length=4pt}]
+    ({\xout+0.0},1.6) -- ({\xout+0.0},3.6);
+  \node[hvred, font=\small, right] at ({\xout+0.1},2.6) {$R_1$ (front)};
+  % R2 (tail)
+  \draw[hvred, thick, decorate, decoration={zigzag,amplitude=2pt,segment length=4pt}]
+    ({\xout+0.0},1.6) -- ({\xout+0.0},-0.4);
+  \node[hvred, font=\small, right] at ({\xout+0.1},0.6) {$R_2$ (queue)};
+  % GND
+  \draw[darkblue, thick] (0.7,0.3) -- (0.7,-0.2) node[below, font=\small]{GND};
+\end{tikzpicture}
+\caption{Générateur de Marx à 4 étages. Chaque condensateur est chargé à 100 kV.
+Au déclenchement, ils se mettent en série : $V_{\rm out} = 4 \times 100 = 400\,\si{kV}$.}
+\end{figure}
+
+\begin{exemple}{Calcul d'un générateur de Marx 10 étages — 1 MV}
+\textbf{Données :} $n = 10$ étages, $V_c = 100\,\si{kV}$ par condensateur, $C = 0.5\,\si{\mu F}$\\[6pt]
+\textbf{Tension de sortie :}
+\[ V_{\rm out} = n \times V_c = 10 \times 100 = 1\,000\,\si{kV} = \mathbf{1\,MV} \]
+\textbf{Énergie stockée :}
+\[ W = \frac{1}{2} n C V_c^2 = \frac{1}{2}\times10\times0.5\times10^{-6}\times(10^5)^2 = 25\,\si{kJ} \]
+\textbf{Résistances de mise en forme :}
+\begin{align*}
+  R_1 &= \frac{T_1}{0.7 \times n\,C} = \frac{1.2\times10^{-6}}{0.7\times10\times0.5\times10^{-6}} \approx 0.34\,\Omega \\
+  R_2 &= \frac{T_2}{0.7 \times C_{\rm load}} \quad \text{(dépend de la charge)}
+\end{align*}
+\end{exemple}
+
+%=============================================================================
+\chapter{Mesure des Hautes Tensions}
+%=============================================================================
+
+\section{Éclateur à Sphères (Sphere Gap)}
+
+L'\textbf{éclateur à sphères} (IEC 60052) est la méthode de référence absolue.
+La tension de claquage entre deux sphères identiques de diamètre $D$ séparées d'une
+distance $d$ est donnée par des tables normalisées.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % HV sphere
+  \fill[midblue!40] (-3,0) circle (1.4);
+  \draw[midblue, thick, line width=1.5pt] (-3,0) circle (1.4);
+  \node[darkblue, font=\normalsize\bfseries] at (-3,0) {HT};
+  \draw[hvred, very thick] (-3,2.5) -- (-3,1.4);
+  \node[hvred, font=\small, above] at (-3, 2.6) {$V_{\rm HT}$};
+  % GND sphere
+  \fill[darkblue!40] (3,0) circle (1.4);
+  \draw[darkblue, thick, line width=1.5pt] (3,0) circle (1.4);
+  \node[white, font=\normalsize\bfseries] at (3,0) {GND};
+  \draw[darkblue, thick] (3,-1.4) -- (3,-2.2);
+  % Ground symbol
+  \draw[darkblue, thick] (2.3,-2.2) -- (3.7,-2.2);
+  \draw[darkblue, thick] (2.6,-2.5) -- (3.4,-2.5);
+  \draw[darkblue, thick] (2.9,-2.8) -- (3.1,-2.8);
+  % Gap
+  \draw[<->, thick, accent] (-1.6,0) -- (1.6,0) node[midway, above, font=\bfseries\large]{$d$};
+  % Spark (zigzag)
+  \draw[yellow!80!orange, very thick, line width=2.5pt]
+    (-1.5,0) -- (-1.0,0.3) -- (-0.5,-0.2) -- (0,0.25) -- (0.5,-0.2) -- (1.0,0.3) -- (1.5,0);
+  \node[yellow!60!orange, font=\small, above] at (0, 0.5) {Étincelle};
+  % Formula box
+  \fill[boxbg] (4.5,-1.0) rectangle (7.5, 1.5);
+  \draw[lightblue, thick] (4.5,-1.0) rectangle (7.5, 1.5);
+  \node[darkblue, font=\small\bfseries] at (6.0, 1.1) {Correction atm.};
+  \node[darkblue, font=\small] at (6.0, 0.55)
+    {$\delta = \dfrac{p \times 293}{101.3 \times T}$};
+  \node[darkblue, font=\small] at (6.0, -0.05) {$V = V_{\rm table} \times \delta$};
+  \node[textmed, font=\scriptsize] at (6.0, -0.6) {$p$ [kPa], $T$ [K]};
+  % Diameter label
+  \draw[<->, thick, midblue] (-4.4,0) -- (-3,0) node[midway, below, font=\small]{$D/2$};
+\end{tikzpicture}
+\caption{Éclateur à sphères : dispositif de mesure de la valeur crête de la tension.
+La table IEC 60052 donne $V_b = f(D, d)$ pour l'air sec à 20°C, 101.3 kPa.}
+\end{figure}
+
+\textbf{Exemple} : sphères $D = 25\,\si{cm}$, écartement $d = 5\,\si{cm}$, $p = 98\,\si{kPa}$, $T = 25°C$ :
+\[
+  V_{\rm table}(D=25\,\si{cm},\,d=5\,\si{cm}) = 93.2\,\si{kV} \quad \text{(IEC 60052 Table 2)}
+\]
+\[
+  \delta = \frac{98 \times 293}{101.3 \times 298} = 0.953
+  \qquad V_b = 93.2 \times 0.953 = \mathbf{88.8\,\si{kV}}
+\]
+
+\section{Diviseurs de Tension}
+
+\subsection{Diviseur Résistif}
+
+\begin{wrapfigure}{r}{0.42\textwidth}
+\vspace{-8pt}
+\begin{tikzpicture}[scale=1.05]
+  % R1 (HV)
+  \fill[midblue!15] (0.5,3.5) rectangle (2.5,6.5);
+  \draw[midblue, thick, decorate,
+        decoration={zigzag, amplitude=3pt, segment length=6pt}]
+    (1.5,3.6) -- (1.5,6.4);
+  \draw[midblue, thick] (1.5,6.4) -- (1.5,7.0);
+  \draw[midblue, thick] (1.5,3.6) -- (1.5,2.8);
+  \node[midblue, font=\bfseries, right] at (2.6,5.0) {$R_1$};
+  \node[textmed, font=\scriptsize, right] at (2.6,4.5) {(HV)};
+  % R2 (LV)
+  \fill[hvgreen!15] (0.5,0.5) rectangle (2.5,2.6);
+  \draw[hvgreen, thick, decorate,
+        decoration={zigzag, amplitude=3pt, segment length=6pt}]
+    (1.5,0.6) -- (1.5,2.5);
+  \draw[hvgreen, thick] (1.5,2.5) -- (1.5,2.8);
+  \draw[hvgreen, thick] (1.5,0.6) -- (1.5,0.0);
+  \node[hvgreen, font=\bfseries, right] at (2.6,1.5) {$R_2$};
+  \node[textmed, font=\scriptsize, right] at (2.6,1.0) {(LV)};
+  % GND
+  \draw[darkblue, thick] (0.8,0.0) -- (2.2,0.0);
+  \draw[darkblue, thick] (1.0,-0.2) -- (2.0,-0.2);
+  \draw[darkblue, thick] (1.2,-0.4) -- (1.8,-0.4);
+  % HV input
+  \draw[hvred, very thick, -Stealth] (1.5,8.0) -- (1.5,7.0);
+  \node[hvred, font=\bfseries, above] at (1.5,8.1) {$V_{\rm HT}$};
+  % Measurement point
+  \fill[accent] (1.5,2.8) circle (0.12);
+  \draw[accent, thick] (1.5,2.8) -- (4.0,2.8);
+  \draw[accent, thick] (4.0,0.0) -- (4.0,2.8);
+  % Voltmeter
+  \draw[accent, thick] (3.5,0.0) -- (4.5,0.0) -- (4.5,2.5) -- (3.5,2.5) -- cycle;
+  \node[accent, font=\bfseries\large] at (4.0,1.25) {V};
+  \node[textmed, font=\scriptsize, right] at (4.6,1.25) {$V_m$};
+  % Formula
+  \node[darkblue, font=\normalsize] at (1.5,-1.1)
+    {$V_{\rm HT} = V_m \dfrac{R_1+R_2}{R_2}$};
+\end{tikzpicture}
+\caption{Diviseur résistif HT}
+\end{wrapfigure}
+
+Le diviseur résistif est la méthode la plus courante pour la mesure permanente DC et AC.
+Son rapport de division est :
+\begin{equation}
+  \boxed{k = \frac{V_{\rm HT}}{V_m} = \frac{R_1 + R_2}{R_2}}
+\end{equation}
+
+\textbf{Exemple} : $R_1 = 10\,\si{M\Omega}$, $R_2 = 10\,\si{k\Omega}$
+\[
+  k = \frac{10\,000 + 10}{10} = 1001 \approx 1000
+\]
+Pour $V_m = 100\,\si{V}$ : $V_{\rm HT} = 100\,\si{kV}$.
+
+\medskip
+\textbf{Limitations du diviseur résistif :}
+\begin{itemize}
+  \item Capacité parasite de $R_1$ dégrade la réponse au-delà de 1--10 kHz.
+  \item Pour les impulsions HT, préférer le diviseur résistif-capacitif (RC).
+  \item Consommation d'énergie : $P = V_{\rm HT}^2/(R_1+R_2)$.
+\end{itemize}
+
+\medskip
+
+\subsection{Comparaison des Méthodes de Mesure HT}
+
+\begin{center}
+\begin{tabular}{lcccl}
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Méthode}} &
+\textcolor{white}{\textbf{DC}} &
+\textcolor{white}{\textbf{AC}} &
+\textcolor{white}{\textbf{Impulsions}} &
+\textcolor{white}{\textbf{Précision}} \\
+\midrule
+Éclateur à sphères & -- & \checkmark & \checkmark & $\pm3\%$ \\
+\rowcolor{lightgray}
+Diviseur résistif   & \checkmark & \checkmark & -- & $\pm0.1\%$ \\
+Diviseur capacitif  & -- & \checkmark & \checkmark & $\pm1\%$ \\
+\rowcolor{lightgray}
+Diviseur RC         & -- & \checkmark & \checkmark & $\pm1\%$ \\
+TPC (transfo capac.)& -- & \checkmark & -- & $\pm0.2\%$ \\
+\rowcolor{lightgray}
+Pockels (électro-opt.)& \checkmark & \checkmark & \checkmark & $\pm0.5\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%=============================================================================
+\chapter{Coordination de l'Isolation}
+%=============================================================================
+
+\section{Principe Général}
+
+La \textbf{coordination de l'isolation} (IEC 60071) est le processus de sélection
+des niveaux d'isolation des équipements d'un réseau électrique pour :
+\begin{enumerate}
+  \item Résister aux surtensions attendues en service normal.
+  \item Permettre la protection par des limiteurs de surtension (parafoudres).
+  \item Assurer la sécurité des personnes et l'intégrité des biens.
+  \item Optimiser le coût global (isolation + protection + maintenance + indisponibilité).
+\end{enumerate}
+
+\section{Hiérarchie des Tensions Caractéristiques}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.85]
+\begin{axis}[
+  ybar,
+  symbolic x coords={
+    {$U_n$}, {$U_m$}, {$U_p$ (parafoudre)},
+    {NIL foudre}, {NIL manœuvre}
+  },
+  xtick=data,
+  x tick label style={font=\small, rotate=20, anchor=east},
+  ymin=0, ymax=1400,
+  ylabel={Tension (kV)},
+  ylabel style={font=\small},
+  bar width=1.5cm,
+  title={Coordination d'isolation — Réseau 400 kV},
+  title style={color=darkblue, font=\bfseries\normalsize},
+  axis background/.style={fill=lightgray!20},
+  ymajorgrids=true, grid style={dotted, gray!40},
+  width=0.92\textwidth, height=7cm,
+]
+\addplot[fill=hvgreen!60, draw=hvgreen!80] coordinates
+  {({$U_n$},400) ({$U_m$},420) ({$U_p$ (parafoudre)},840)
+   ({NIL foudre},1300) ({NIL manœuvre},1050)};
+\end{axis}
+\node[accent, font=\small] at (2.0,3.0) {$U_n=400$};
+\node[midblue, font=\small] at (3.8,3.2) {$U_m=420$};
+\node[hvred, font=\small] at (5.7,4.5) {$U_p=840$};
+\end{tikzpicture}
+\caption{Niveaux de tension pour la coordination d'isolation d'un réseau 400 kV.}
+\end{figure}
+
+\begin{formulebox}{Démarche de coordination — Méthode déterministe (IEC 60071-1)}
+\begin{enumerate}
+  \item Déterminer $U_m$ (tension max. d'équipement) : $U_m = 1.05\,U_n$
+  \item Estimer la surtension de manœuvre maximale : $U_s = k_s \cdot U_m\sqrt{2/3}$
+    avec $k_s = 3$ pour les réseaux non compensés.
+  \item Choisir le parafoudre : $U_r \geq 1.25\,U_m/\sqrt{3}$
+  \item Déterminer le niveau de protection : $U_p = f(U_r, I_n)$ (table fabricant)
+  \item Calculer le NIL requis : $\text{NIL} \geq K_{cs} \cdot U_p$ ($K_{cs} = 1.15$ typique)
+  \item Sélectionner le NIL normalisé supérieur dans la série IEC.
+\end{enumerate}
+\end{formulebox}
+
+\begin{exemple}{Coordination d'isolation — Réseau 225 kV}
+\begin{align*}
+  U_n &= 225\,\si{kV} \\
+  U_m &= 245\,\si{kV} \quad \text{(max. équipement IEC)} \\
+  U_{m,\text{crête}} &= 245 \times \sqrt{2/3} = 200\,\si{kV} \\
+  U_s &= 3 \times 200 = 600\,\si{kV} \quad \text{(surtension manœuvre)} \\
+  U_r &\geq 1.25 \times 245/\sqrt{3} = 177\,\si{kV} \rightarrow \text{choisir } U_r = 192\,\si{kV} \\
+  U_p &= 530\,\si{kV} \quad \text{(catalogue, } I_n = 10\,\si{kA)} \\
+  \text{NIL} &\geq 1.15 \times 530 = 610\,\si{kV} \rightarrow \text{NIL normalisé} = \mathbf{650\,\si{kV}}
+\end{align*}
+\end{exemple}
+
+%=============================================================================
+\chapter{Applications Industrielles}
+%=============================================================================
+
+\section{Transformateurs de Puissance}
+
+Les transformateurs de puissance (THT) sont les équipements les plus critiques et
+les plus coûteux des réseaux électriques. Un transformateur 400/225 kV de 1000 MVA
+représente un investissement de plusieurs millions d'euros et une durée de vie visée
+de 40--50 ans.
+
+\subsection{Construction et Isolation}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Partie}} &
+\textcolor{white}{\textbf{Isolation et caractéristiques}} \\
+\midrule
+Enroulements HT/BT & Papier kraft imprégné huile (10--25 couches, $\varepsilon_r \approx 3.8$) \\
+\rowcolor{lightgray}
+Huile isolante & Huile naphténique ou ester, $E_{\rm claquage} > 70\,\si{kV/cm}$ \\
+Traversées HT  & Condensateur céramique ou résine, NIL = 1300 kV (côté 400 kV) \\
+\rowcolor{lightgray}
+Noyau magnétique & Acier siliceux (3\% Si), mise à la terre en un seul point \\
+Prise en charge   & Régleur en charge (OLTC), $\pm 10\,\%$ en 19 prises \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Essais Diélectriques Normalisés (IEC 60076-3)}
+
+\begin{itemize}
+  \item \textbf{Tenue à la tension appliquée (ACSD) :} $1.1 \times \sqrt{2} \times U_m/\sqrt{3}$
+    pendant 60 s. Vérifie la tenue de l'isolation principale.
+  \item \textbf{Tenue aux chocs de foudre (LI) :} 3 chocs positifs et 3 négatifs
+    à l'amplitude NIL = 1300 kV pour un réseau 400 kV.
+  \item \textbf{Mesure des décharges partielles :} $Q_{\rm max} < 500\,\si{pC}$ à
+    $1.5\,U_m/\sqrt{3}$ pendant 30 min. Critère essentiel de santé de l'isolation.
+  \item \textbf{Tenue aux chocs de manœuvre (SI) :} Obligatoire pour $U_m \geq 300\,\si{kV}$.
+    Niveau : 1050 kV pour le réseau 400 kV.
+\end{itemize}
+
+\section{Lignes de Transport THT}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  % Pylon
+  \draw[darkblue, line width=2pt] (7,0) -- (7,9);
+  \draw[darkblue, line width=1.5pt] (5.5,0) -- (7,2) -- (8.5,0);
+  \draw[darkblue, line width=1.5pt] (4,3.5) -- (10,3.5);
+  \draw[darkblue, line width=1.5pt] (4.5,6.0) -- (9.5,6.0);
+  \draw[darkblue, line width=1.5pt] (5.2,8.0) -- (8.8,8.0);
+  % Guard cable
+  \draw[hvgreen, line width=1.5pt] (5.2,8.0) arc (180:0:1.8 and 0.3);
+  \node[hvgreen, font=\tiny, above] at (7,8.35) {câble garde};
+  % Insulator strings
+  \foreach \x in {4, 10}{
+    \foreach \dy in {0,...,4}{
+      \draw[accent, line width=1.2pt] (\x, {3.5-\dy*0.22}) circle (0.08);
+    }
+    \draw[accent] (\x, 3.5) -- (\x, {3.5-4*0.22});
+  }
+  \foreach \x in {4.5, 9.5}{
+    \foreach \dy in {0,...,4}{
+      \draw[accent, line width=1.2pt] (\x, {6.0-\dy*0.22}) circle (0.07);
+    }
+    \draw[accent] (\x, 6.0) -- (\x, {6.0-4*0.22});
+  }
+  % Phase conductors (bundles)
+  \foreach \x/\y in {4/2.4, 10/2.4, 4.5/4.9, 9.5/4.9}{
+    \fill[midblue!60] (\x,\y) circle (0.18);
+    \fill[midblue!30] ({\x+0.25},\y) circle (0.12);
+    \fill[midblue!30] ({\x-0.25},\y) circle (0.12);
+    \node[white, font=\tiny] at (\x,\y) {HT};
+  }
+  % Ground
+  \draw[darkblue, very thick] (4,0) -- (10,0);
+  % Labels
+  \node[darkblue, font=\footnotesize, right] at (10.2,3.5) {$h_{\rm conduc.}$};
+  \draw[<->, darkblue] (10.5,0) -- (10.5,3.5) node[midway,right,font=\tiny]{$\geq18\,\si{m}$};
+  \node[accent, font=\footnotesize, left] at (3.5,3.0) {Chaîne isolateurs};
+  \node[midblue, font=\footnotesize, left] at (3.3,2.4) {Faisceau 2 fils};
+\end{tikzpicture}
+\caption{Pylône de ligne 400 kV avec chaînes d'isolateurs, conducteurs en faisceau
+et câble de garde supérieur.}
+\end{figure}
+
+\begin{retenir}{Caractéristiques des lignes THT françaises (RTE, 400 kV)}
+\begin{itemize}
+  \item Conducteurs : aluminium-acier (ACSR), section 570 mm$^2$, 2 conducteurs/phase
+  \item Chaînes d'isolateurs : 22--24 disques verre par chaîne
+  \item Distance d'isolement dans l'air : 2.5 m (phase-pylône), 6.5 m (phase-phase)
+  \item Hauteur minimale au sol : 8 m (zone rurale), 10 m (voirie)
+  \item Câble de garde : OPGW (fibre optique intégrée)
+\end{itemize}
+\end{retenir}
+
+\section{Postes Blindés à Isolation Gazeuse (GIS)}
+
+Les postes \textbf{GIS} (Gas-Insulated Switchgear) utilisent le SF$_6$ sous pression
+(3--5 bar) comme isolant et extincteur. Ils représentent l'état de l'art en matière
+de fiabilité et de compacité.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Critère}} &
+\textcolor{white}{\textbf{Poste conventionnel (air)}} &
+\textcolor{white}{\textbf{Poste GIS}} \\
+\midrule
+Emprise au sol & $100\,\%$ (référence) & $5$--$10\,\%$ \\
+\rowcolor{lightgray}
+Entretien & Inspection tous 3--5 ans & Inspection tous 20--25 ans \\
+Fiabilité (MTBF) & $\sim$50 ans (compos.) & $\sim$100 ans (compos.) \\
+\rowcolor{lightgray}
+Sensibilité météo & Forte (pluie, pollution) & Nulle (hermétique) \\
+Coût d'installation & Faible & 3--5× plus élevé \\
+\rowcolor{lightgray}
+Bruit corona & Présent & Absent \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+%=============================================================================
+\chapter{Normes et Standards}
+%=============================================================================
+
+\section{Normes IEC — Haute Tension}
+
+\begin{longtable}{lp{7cm}p{4cm}}
+\caption{Normes IEC principales pour la haute tension}\\
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Norme}} &
+\textcolor{white}{\textbf{Titre et domaine}} &
+\textcolor{white}{\textbf{Édition}} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{\small\itshape Suite du tableau~\thetable}\\
+\toprule
+\rowcolor{darkblue}
+\textcolor{white}{\textbf{Norme}} &
+\textcolor{white}{\textbf{Titre et domaine}} &
+\textcolor{white}{\textbf{Édition}} \\
+\midrule
+\endhead
+IEC 60060-1 & Techniques d'essais à haute tension — Mesures et définitions générales & 2010 \\
+\rowcolor{lightgray}
+IEC 60060-2 & Systèmes de mesure pour les essais HT & 2010 \\
+IEC 60060-3 & Définitions et exigences pour les essais sur site & 2006 \\
+\rowcolor{lightgray}
+IEC 60071-1 & Coordination de l'isolation — Définitions, principes & 2019 \\
+IEC 60071-2 & Coordination — Guide d'application & 2018 \\
+\rowcolor{lightgray}
+IEC 60076-3 & Transformateurs de puissance — Niveaux d'isolation & 2013 \\
+IEC 60270   & Mesure des décharges partielles & 2015 \\
+\rowcolor{lightgray}
+IEC 60052   & Éclateurs à sphères — Tables de mesure & 2002 \\
+IEC 60099-4 & Parafoudres — Parafoudres à oxyde métallique & 2014 \\
+\rowcolor{lightgray}
+IEC 60840   & Câbles HT $> 30\,\si{kV}$ — Essais & 2020 \\
+IEC 62067   & Câbles THT $> 150\,\si{kV}$ — Essais & 2011 \\
+\rowcolor{lightgray}
+IEC 62271-203 & Appareillage HTA/HTB à isolation gazeuse (GIS) & 2022 \\
+IEC 62271-100 & Disjoncteurs HT & 2021 \\
+\rowcolor{lightgray}
+IEC 60156   & Détermination de la rigidité diélectrique de l'huile & 2018 \\
+\bottomrule
+\end{longtable}
+
+\section{Normes IEEE}
+
+Les normes IEEE (principalement utilisées en Amérique du Nord) couvrent les mêmes
+domaines avec quelques différences d'approche :
+
+\begin{itemize}
+  \item \textbf{IEEE Std 4} (2013) : Techniques d'essais HT — équivalent de IEC 60060.
+  \item \textbf{IEEE Std 1313.1} (1996) : Coordination de l'isolation — Définitions.
+  \item \textbf{IEEE Std 1313.2} (1999) : Coordination — Guide d'application.
+  \item \textbf{IEEE C62.11} (2012) : Parafoudres ZnO pour systèmes AC.
+  \item \textbf{IEEE C62.22} (2009) : Guide d'application des parafoudres.
+  \item \textbf{IEEE C62.82.1} (2010) : Niveaux d'isolation pour systèmes $\leq 1000\,\si{kV}$.
+\end{itemize}
+
+\begin{infobox}{Convergence IEC--IEEE}
+Les éditions récentes des normes IEC et IEEE tendent à s'harmoniser pour faciliter
+les échanges internationaux d'équipements. Les valeurs numériques (NIL, tensions normalisées)
+restent cependant légèrement différentes, ce qu'il faut toujours vérifier lors de projets
+internationaux.
+\end{infobox}
+
+%=============================================================================
+\chapter{Conclusion et Perspectives}
+%=============================================================================
+
+\section{Résumé des Concepts Clés}
+
+Ce document a présenté les bases de l'ingénierie haute tension en couvrant :
+
+\begin{enumerate}
+  \item \textbf{Fondements électrostatiques :} Champ $\vec{E}$, potentiel $V$, loi de Gauss,
+    matériaux diélectriques ($\varepsilon_r$, rigidité diélectrique).
+
+  \item \textbf{Phénomènes de claquage :} Mécanisme de Townsend (gaz), streamers,
+    claquage des liquides et solides, loi de Paschen, minimum de Paschen.
+
+  \item \textbf{Effet corona et décharges partielles :} Mécanismes, conséquences industrielles,
+    formule de Peek, mesure et limites normatives (IEC 60270).
+
+  \item \textbf{Surtensions :} Foudre (1.2/50 µs), manœuvre (250/2500 µs),
+    protection par parafoudres MOV (ZnO), câbles de garde.
+
+  \item \textbf{Génération HT :} Transformateurs de test en cascade, multiplicateur
+    Cockroft-Walton, générateur de Marx (principe charge-parallèle / décharge-série).
+
+  \item \textbf{Mesure HT :} Éclateur à sphères (référence absolue), diviseurs
+    résistifs/capacitifs/RC, méthodes électro-optiques (Pockels).
+
+  \item \textbf{Coordination d'isolation :} Hiérarchie $U_n < U_m < U_s < U_p < \text{NIL}$,
+    méthodes déterministe et probabiliste, normes IEC 60071.
+
+  \item \textbf{Applications industrielles :} Transformateurs THT, lignes de transport,
+    postes GIS (SF$_6$), problématique environnementale du SF$_6$.
+\end{enumerate}
+
+\section{Perspectives — Transition Énergétique et HT}
+
+\subsection{HVDC et Réseaux Multiterminaux}
+
+Le transport d'énergie en \textbf{courant continu haute tension (HVDC)} connaît
+une croissance exponentielle avec la transition énergétique :
+
+\begin{itemize}
+  \item Liaisons terrestres $\pm$320 kV VSC pour les interconnexions européennes.
+  \item Liaisons sous-marines $\pm$525 kV pour les parcs éoliens offshore
+    (Dogger Bank UK, $\pm$500 MW par liaison).
+  \item Vision ``SuperGrid'' : grille DC continentale reliant les sources
+    renouvelables aux centres de consommation à l'échelle de l'Europe et de l'Afrique du Nord.
+\end{itemize}
+
+\subsection{Nouveaux Défis Techniques}
+
+\begin{itemize}
+  \item \textbf{Disjoncteurs DC HT :} Enjeu technologique majeur (pas d'annulation naturelle
+    du courant). Solutions hybrides mécanique-électronique (ABB, GE, Siemens).
+  \item \textbf{Isolation HVDC :} Le champ électrique dans les isolants DC dépend de la
+    conductivité $\sigma$ (résistivité thermique) et non de $\varepsilon$ — comportement
+    très différent du cas AC.
+  \item \textbf{Remplacement du SF$_6$ :} Alternatives écologiques (mélanges g$^3$,
+    CO$_2$/O$_2$, air sec) nécessitant une refonte de la conception des appareillages.
+  \item \textbf{Supraconducteurs :} Câbles HTS (REBCO, BSCCO) pour le transport urbain
+    haute densité de puissance sans pertes résistives.
+  \item \textbf{Smart Grids :} Numérisation des postes (IEC 61850), capteurs IoT embarqués
+    sur les équipements HT, jumeaux numériques, maintenance prédictive par IA.
+\end{itemize}
+
+\begin{retenir}{L'Ingénieur HT de Demain (2030--2050)}
+Les compétences clés pour l'ingénieur HT de la prochaine décennie :
+\begin{itemize}
+  \item Maîtrise des convertisseurs VSC-HVDC (modélisation, protection, exploitation)
+  \item Modélisation numérique avancée : FEM (COMSOL), transitoires (EMTP-ATP, PSCAD)
+  \item Diagnostic et surveillance des équipements HT (DP, DGA, thermographie)
+  \item Conception bas-carbone : zéro SF$_6$, matériaux biosourcés, économie circulaire
+  \item Gestion des nouvelles sources de surtensions (onduleurs, FACTS, disjoncteurs DC)
+\end{itemize}
+\end{retenir}
+
+\vspace{1cm}
+\begin{center}
+\textcolor{accent}{\rule{0.8\textwidth}{1.5pt}}\\[8pt]
+{\large\textit{\textcolor{darkblue}{``Le génie électrique haute tension est la colonne vertébrale}}}\\
+{\large\textit{\textcolor{darkblue}{de la transition énergétique mondiale.''}}}\\[8pt]
+\textcolor{accent}{\rule{0.8\textwidth}{1.5pt}}
+\end{center}
+
+\vspace{1.5cm}
+\noindent
+\small
+\textcolor{textmed}{
+Ce document constitue une introduction structurée et pédagogique aux Techniques de
+Haute Tension. Pour approfondir les sujets traités, les ouvrages suivants sont recommandés :
+\begin{itemize}
+  \item E.\ Kuffel, W.S.\ Zaengl \& J.\ Kuffel — \textit{High Voltage Engineering: Fundamentals}, Newnes, 2000.
+  \item M.S.\ Naidu \& V.\ Kamaraju — \textit{High Voltage Engineering}, McGraw-Hill, 2013.
+  \item A.\ Küchler — \textit{High Voltage Engineering: Fundamentals Technology — Applications}, Springer, 2018.
+  \item C.L.\ Wadhwa — \textit{High Voltage Engineering}, New Age International, 2007.
+\end{itemize}
+}
+
+\end{document}
