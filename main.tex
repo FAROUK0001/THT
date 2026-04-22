@@ -4,11 +4,13 @@
 %=============================================================================
 \documentclass[12pt, a4paper, twoside]{report}
 
-%─── Encoding & Language ─────────────────────────────────────────────────────
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+%─── Language & XeLaTeX fonts ────────────────────────────────────────────────
 \usepackage[french]{babel}
-\usepackage{lmodern}
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
 
 %─── Page geometry ────────────────────────────────────────────────────────────
 \usepackage[
@@ -99,7 +101,7 @@
 {
 	\colorbox{darkblue}{
 		\parbox{\dimexpr\textwidth-2\fboxsep\relax}{
-			\hspace{4pt}\textcolor{accent}{\thechapter.}\hspace{8pt}\strut #1\hspace{4pt}
+			\hspace{4pt}\textcolor{accent}{\thechapter.}\hspace{8pt}\strut ##1\hspace{4pt}
 		}
 	}
 }
@@ -125,11 +127,7 @@
 \titlespacing*{\subsubsection}{0pt}{8pt}{2pt}
 
 %─── TOC styling ──────────────────────────────────────────────────────────────
-\usepackage{tocloft}
-\renewcommand{\cftchapfont}{\bfseries\color{darkblue}}
-\renewcommand{\cftchappagefont}{\bfseries\color{accent}}
-\renewcommand{\cftsecfont}{\color{midblue}}
-\renewcommand{\cftsubsecfont}{\small\color{textmed}}
+% tocloft disabled to avoid \@starttoc redefinition conflict in this setup
 
 %─── Hyperref ─────────────────────────────────────────────────────────────────
 \usepackage[
@@ -203,6 +201,7 @@
 
 %─── Font icons (optional, comment out if not installed) ──────────────────────
 % \usepackage{fontawesome5}
+\providecommand{\faIcon}[1]{}
 
 %=============================================================================
 %  DOCUMENT
@@ -366,18 +365,18 @@ pour véhiculer ces gigawatts sur des milliers de kilomètres avec des pertes ac
 \centering
 \begin{tikzpicture}[scale=0.85]
   % Simple overview of power system
-  \node[draw=hvgreen, fill=hvgreen!15, rounded corners, minimum width=2.2cm, minimum height=1cm]
-    (gen) at (0,0) {\small\textbf{Génération}\\[-2pt]\tiny 10--20\,kV};
-  \node[draw=midblue, fill=midblue!15, rounded corners, minimum width=2.2cm, minimum height=1cm]
-    (step1) at (3.5,0) {\small\textbf{Élévation}\\[-2pt]\tiny 400\,kV};
-  \node[draw=darkblue, fill=darkblue!15, rounded corners, minimum width=2.6cm, minimum height=1cm, text=white]
-    (trans) at (7.5,0) {\small\textbf{Transport THT}\\[-2pt]\tiny 225--765\,kV};
-  \node[draw=accent, fill=accent!15, rounded corners, minimum width=2.2cm, minimum height=1cm]
-    (step2) at (11.5,0) {\small\textbf{Abaissement}\\[-2pt]\tiny 63\,kV};
-  \node[draw=hvred, fill=hvred!10, rounded corners, minimum width=2.2cm, minimum height=1cm]
-    (dist) at (15,0) {\small\textbf{Distribution}\\[-2pt]\tiny 20\,kV/400\,V};
+  \node[draw=hvgreen, fill=hvgreen!15, rounded corners, minimum width=2.2cm, minimum height=1cm, align=center]
+    (gen) at (0,0) {\shortstack{\small\textbf{Génération}\\[-2pt]\tiny 10--20\,kV}};
+  \node[draw=midblue, fill=midblue!15, rounded corners, minimum width=2.2cm, minimum height=1cm, align=center]
+    (step1) at (3.5,0) {\shortstack{\small\textbf{Élévation}\\[-2pt]\tiny 400\,kV}};
+  \node[draw=darkblue, fill=darkblue!15, rounded corners, minimum width=2.6cm, minimum height=1cm, text=white, align=center]
+    (trans) at (7.5,0) {\shortstack{\small\textbf{Transport THT}\\[-2pt]\tiny 225--765\,kV}};
+  \node[draw=accent, fill=accent!15, rounded corners, minimum width=2.2cm, minimum height=1cm, align=center]
+    (step2) at (11.5,0) {\shortstack{\small\textbf{Abaissement}\\[-2pt]\tiny 63\,kV}};
+  \node[draw=hvred, fill=hvred!10, rounded corners, minimum width=2.2cm, minimum height=1cm, align=center]
+    (dist) at (15,0) {\shortstack{\small\textbf{Distribution}\\[-2pt]\tiny 20\,kV/400\,V}};
 
-  \draw[-Stealth, thick, midblue] (gen) -- (step1) node[midway, above, small] {};
+  \draw[-Stealth, thick, midblue] (gen) -- (step1) node[midway, above, font=\small] {};
   \draw[-Stealth, thick, darkblue] (step1) -- (trans);
   \draw[-Stealth, thick, darkblue] (trans) -- (step2);
   \draw[-Stealth, thick, hvred] (step2) -- (dist);
@@ -1049,11 +1048,11 @@ en \textbf{cascade} :
   component/.style={draw=midblue, fill=midblue!10, rounded corners, minimum width=2cm, minimum height=1.2cm}
 ]
   % Stage 1
-  \node[component] (T1) at (0,0) {\textbf{T$_1$}\\[2pt]\footnotesize $V_1 = 100\,\si{kV}$};
+  \node[component, align=center] (T1) at (0,0) {\shortstack{\textbf{T$_1$}\\[2pt]\footnotesize $V_1 = 100\,\si{kV}$}};
   % Stage 2
-  \node[component] (T2) at (3.5,1.5) {\textbf{T$_2$}\\[2pt]\footnotesize $V_2 = 100\,\si{kV}$};
+  \node[component, align=center] (T2) at (3.5,1.5) {\shortstack{\textbf{T$_2$}\\[2pt]\footnotesize $V_2 = 100\,\si{kV}$}};
   % Stage 3
-  \node[component] (T3) at (7,3.0) {\textbf{T$_3$}\\[2pt]\footnotesize $V_3 = 100\,\si{kV}$};
+  \node[component, align=center] (T3) at (7,3.0) {\shortstack{\textbf{T$_3$}\\[2pt]\footnotesize $V_3 = 100\,\si{kV}$}};
   % Connections
   \draw[hvred, thick, -Stealth] (T1.north) -- ++(0,0.8) -| (T2.south west);
   \draw[hvred, thick, -Stealth] (T2.north) -- ++(0,0.8) -| (T3.south west);
